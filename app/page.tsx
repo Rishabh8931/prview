@@ -1,4 +1,4 @@
-import { ModeToggle } from "@/components/ui/theme-toggle";
+
 import Image from "next/image";
 
 export default function Home() {
@@ -65,7 +65,7 @@ export default function Home() {
           </a>
         </div>
       </main>
-      <ModeToggle />
+
     </div>
   );
 }
