@@ -6,11 +6,10 @@ import { redirect } from "next/navigation";
 export async function signInWithGithub(formData: FormData) {
   const callbackUrl = formData.get("callbackUrl") as string | undefined;
 
-
+  // todoo: fix callback later
   const result = await auth.api.signInSocial({
     body: {
       provider: "github",
-      callbackURL: "/dashboard",
     },
 
     headers: await headers(),

@@ -34,8 +34,8 @@ const SignInPage = async ({ searchParams }: SignInPageProps) => {
           <Image
             src="/logo.svg"
             alt="Chai AI Code Reviewer"
-            width={125}
-            height={125}
+            width={100}
+            height={100}
             priority
             className="dark:brightness-150 dark:saturate-150"
           />
