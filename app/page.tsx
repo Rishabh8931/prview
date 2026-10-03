@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ModeToggle } from "@/components/mode-toggle";
+// import { ModeToggle } from "@/components/mode-toggle";
 import { authClient } from "@/lib/auth-client";
 
 export default function Home() {
