@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { UserMenuUser } from "@/features/auth/components/user-menu";
 
@@ -30,7 +31,7 @@ export function DashboardSidebar({
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="group-data-[collapsible=icon]:hidden">
             <SidebarMenuButton
               size="lg"
               tooltip="ChaiCodeAIReview"
@@ -62,6 +63,7 @@ export function DashboardSidebar({
       <SidebarFooter>
         <SidebarSeparator />
         <SidebarUserButton user={user} plan={plan} />
+        <SidebarTrigger className="self-start" />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
