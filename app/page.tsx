@@ -14,7 +14,7 @@ import {
   Terminal,
   Zap,
 } from "lucide-react";
-import {GithubLogoIcon} from "@phosphor-icons/react";
+import { GithubLogoIcon } from "@phosphor-icons/react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
@@ -459,7 +459,7 @@ export default function Home() {
         <Link href="/" className="relative z-10 flex items-center gap-2">
           {/* TODO: change this to your actual logo image path */}
           <Image
-            src="/logo.png"
+            src="/logo.svg"
             alt="Chai AI Code Reviewer"
             width={32}
             height={32}

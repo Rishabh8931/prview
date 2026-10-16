@@ -16,6 +16,24 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Share the local app with ngrok
+
+Make sure ngrok is installed and authenticated, then run:
+
+```bash
+pnpm dev:ngrok
+```
+
+This starts ngrok, discovers its HTTPS URL, and starts Next.js with
+`BETTER_AUTH_URL` set to the same URL. Use the printed ngrok URL when testing
+the app or configuring the GitHub OAuth callback:
+
+```text
+https://<your-ngrok-domain>/api/auth/callback/github
+```
+
+Stop both the Next.js server and the ngrok tunnel with `Ctrl+C`.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
