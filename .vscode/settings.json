@@ -1,0 +1,136 @@
+{
+  "workbench.colorTheme": "Tokyo Night Storm",
+
+  // Multiple compact tabs
+  "workbench.editor.showTabs": "multiple",
+  "workbench.editor.tabSizing": "shrink",
+  "workbench.editor.wrapTabs": false,
+  "workbench.editor.pinnedTabSizing": "compact",
+  "workbench.editor.tabCloseButton": "right",
+  "workbench.editor.limit.enabled": false,
+  "workbench.editor.highlightModifiedTabs": true,
+
+  // Minimal interface
+  "workbench.startupEditor": "none",
+  "workbench.activityBar.location": "hidden",
+  "workbench.statusBar.visible": false,
+  "workbench.sideBar.location": "left",
+  "window.commandCenter": false,
+  "window.menuBarVisibility": "toggle",
+  "breadcrumbs.enabled": false,
+  "workbench.tips.enabled": false,
+
+  // Clean editor
+  "editor.minimap.enabled": false,
+  "editor.stickyScroll.enabled": false,
+  "editor.glyphMargin": false,
+  "editor.renderLineHighlight": "line",
+  "editor.lineHighlightBackground": "#292E42",
+  "editor.lineHeight": 24,
+  "editor.fontSize": 14,
+  "editor.fontFamily": "'SF Mono', Menlo, Monaco, monospace",
+  "editor.fontLigatures": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.smoothScrolling": true,
+  "editor.scrollBeyondLastLine": false,
+  "editor.guides.indentation": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.matchBrackets": "near",
+
+  // Suggestions
+  "editor.suggest.preview": false,
+  "editor.parameterHints.enabled": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.inlayHints.enabled": "off",
+  "editor.codeLens": false,
+
+  // Coding defaults
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.autoSave": "off",
+
+  // Explorer
+  "explorer.compactFolders": true,
+  "explorer.openEditors.visible": 0,
+  "explorer.decorations.badges": false,
+  "explorer.decorations.colors": true,
+
+  // Terminal
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.fontFamily": "'SF Mono', Menlo, Monaco, monospace",
+  "terminal.integrated.cursorBlinking": false,
+  "terminal.integrated.scrollback": 5000,
+
+  // Tokyo Night Storm token colors
+  "editor.tokenColorCustomizations": {
+    "[Tokyo Night Storm]": {
+      "textMateRules": [
+        {
+          "scope": ["keyword", "storage.type", "storage.modifier"],
+          "settings": {
+            "foreground": "#BB9AF7"
+          }
+        },
+        {
+          "scope": ["entity.name.function", "support.function"],
+          "settings": {
+            "foreground": "#7AA2F7"
+          }
+        },
+        {
+          "scope": ["string", "string.quoted", "string.template"],
+          "settings": {
+            "foreground": "#9ECE6A"
+          }
+        },
+        {
+          "scope": ["entity.name.type", "entity.name.class", "support.type"],
+          "settings": {
+            "foreground": "#2AC3DE"
+          }
+        },
+        {
+          "scope": ["constant.numeric", "constant.language"],
+          "settings": {
+            "foreground": "#FF9E64"
+          }
+        },
+        {
+          "scope": ["variable", "meta.definition.variable"],
+          "settings": {
+            "foreground": "#C0CAF5"
+          }
+        },
+        {
+          "scope": ["comment", "punctuation.definition.comment"],
+          "settings": {
+            "foreground": "#565F89",
+            "fontStyle": "italic"
+          }
+        }
+      ]
+    }
+  },
+
+  // Language-specific formatting
+  "[javascript]": {
+    "editor.tabSize": 2
+  },
+  "[javascriptreact]": {
+    "editor.tabSize": 2
+  },
+  "[typescript]": {
+    "editor.tabSize": 2
+  },
+  "[typescriptreact]": {
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.tabSize": 2
+  }
+}
