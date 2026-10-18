@@ -3,777 +3,348 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  ArrowRight,
   ArrowUpRight,
   Check,
-  ChevronDown,
+  ChevronRight,
+  CircleCheck,
   Code2,
+  GitBranch,
   GitPullRequest,
-  GitMerge,
+  LockKeyhole,
+  Play,
+  ScanSearch,
   ShieldCheck,
   Sparkles,
-  Terminal,
   Zap,
 } from "lucide-react";
 import { GithubLogoIcon } from "@phosphor-icons/react";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { motion } from "motion/react";
 
 import { ModeToggle } from "@/components/ui/theme-toggle";
 import { UserMenuWithSession } from "@/features/auth/components/user-menu";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const fadeUp = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.7,
-      ease,
-    },
-  },
+const reveal = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease } },
 };
 
-const stagger = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.08,
-    },
-  },
-};
-
-const floatingCode = [
+const features = [
   {
-    code: "+ const user = await getUser();",
-    className: "left-[4%] top-[28%]",
-    delay: 0,
+    icon: ScanSearch,
+    eyebrow: "Signal over noise",
+    title: "Only the findings that matter",
+    text: "Chai traces the change through your codebase and filters out the low-value comments that slow teams down.",
+    className: "md:col-span-2",
   },
   {
-    code: "- await db.users.findUnique(...)",
-    className: "right-[3%] top-[22%]",
-    delay: 1.2,
+    icon: ShieldCheck,
+    eyebrow: "Built for trust",
+    title: "Reviews with a reason",
+    text: "Every finding explains the risk, points to the source, and gives your team a practical next step.",
+    className: "",
   },
   {
-    code: "⚡ potential N+1 query",
-    className: "right-[8%] bottom-[24%]",
-    delay: 0.7,
+    icon: Zap,
+    eyebrow: "Fits your flow",
+    title: "Zero new rituals",
+    text: "Open a pull request in GitHub. Chai reviews it automatically and posts right where your team already works.",
+    className: "",
   },
   {
-    code: "✓ auth middleware",
-    className: "left-[8%] bottom-[20%]",
-    delay: 1.8,
+    icon: LockKeyhole,
+    eyebrow: "Private by default",
+    title: "Your code stays yours",
+    text: "Scoped repository access, secure credentials, and no copy-pasting sensitive code into another tool.",
+    className: "md:col-span-2",
   },
 ];
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function SectionKicker({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-6 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
-      <span className="h-px w-8 bg-primary" />
+    <div className="mb-5 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-400">
+      <span className="h-px w-6 bg-current" />
       {children}
     </div>
   );
 }
 
-function FloatingCode() {
+function ProductPreview() {
   return (
-    <>
-      {floatingCode.map((item) => (
-        <motion.div
-          key={item.code}
-          className={`pointer-events-none absolute hidden rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 font-mono text-[10px] text-white/45 backdrop-blur-md lg:block ${item.className}`}
-          animate={{
-            y: [0, -10, 0],
-            opacity: [0.45, 0.8, 0.45],
-          }}
-          transition={{
-            duration: 5,
-            delay: item.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          {item.code}
-        </motion.div>
-      ))}
-    </>
-  );
-}
-
-function HeroSystem() {
-  return (
-    <div className="relative mx-auto mt-20 h-[440px] w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#080909] shadow-2xl shadow-black/40">
-      {/* Ambient light */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-[100px]"
-        animate={{
-          scale: [1, 1.25, 1],
-          opacity: [0.35, 0.7, 0.35],
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:44px_44px]" />
-
-      <FloatingCode />
-
-      {/* Orbit */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-[310px] w-[310px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.06]"
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        <div className="absolute -left-2 top-1/2 h-4 w-4 rounded-full border border-emerald-400/50 bg-emerald-400/20 shadow-[0_0_25px_rgba(52,211,153,0.5)]" />
-      </motion.div>
-
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.07]"
-        animate={{ rotate: -360 }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      >
-        <div className="absolute -right-1 top-1/2 h-3 w-3 rounded-full bg-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.8)]" />
-      </motion.div>
-
-      {/* Center AI node */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 z-20 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-3xl border border-white/15 bg-white/[0.07] shadow-[0_0_80px_rgba(16,185,129,0.12)] backdrop-blur-xl"
-        animate={{
-          y: [-5, 5, -5],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      >
-        <div className="absolute inset-3 rounded-2xl border border-emerald-400/10" />
-
-        <div className="relative flex flex-col items-center gap-2">
-          <Sparkles className="size-7 text-emerald-400" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
-            CHAI AI
+    <motion.div
+      initial={{ opacity: 0, y: 30, rotateX: 8 }}
+      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+      transition={{ delay: 0.2, duration: 0.9, ease }}
+      className="relative mx-auto mt-16 w-full max-w-6xl [perspective:1200px]"
+    >
+      <div className="absolute -inset-8 rounded-[2.5rem] bg-emerald-500/10 blur-3xl" />
+      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#101413] text-white shadow-2xl shadow-emerald-950/30">
+        <div className="flex h-12 items-center justify-between border-b border-white/10 px-4 sm:px-6">
+          <div className="flex items-center gap-2">
+            <span className="size-2 rounded-full bg-red-400/80" />
+            <span className="size-2 rounded-full bg-amber-400/80" />
+            <span className="size-2 rounded-full bg-emerald-400/80" />
+          </div>
+          <div className="flex items-center gap-2 text-[10px] text-white/40">
+            <GithubLogoIcon className="size-3.5" />
+            acme / checkout
+          </div>
+          <span className="hidden font-mono text-[10px] text-white/30 sm:block">
+            chai/reviewer
           </span>
         </div>
-      </motion.div>
 
-      {/* PR node */}
-      <motion.div
-        className="absolute left-[13%] top-1/2 z-10 -translate-y-1/2"
-        initial={{ opacity: 0, x: -30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.4, ease }}
-      >
-        <SystemNode
-          icon={<GitPullRequest className="size-4" />}
-          label="Pull Request"
-          sub="42 files changed"
-        />
-      </motion.div>
+        <div className="grid min-h-[330px] md:grid-cols-[1.1fr_0.9fr]">
+          <div className="border-b border-white/10 p-5 sm:p-7 md:border-b-0 md:border-r">
+            <div className="mb-7 flex items-center justify-between">
+              <div>
+                <div className="text-sm font-medium">Pull request #184</div>
+                <div className="mt-1 text-[11px] text-white/40">
+                  Improve checkout session handling
+                </div>
+              </div>
+              <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] text-emerald-300">
+                Open
+              </span>
+            </div>
+            <div className="space-y-2 font-mono text-[11px] leading-6 text-white/45">
+              <div className="flex gap-5">
+                <span className="w-5 text-right text-white/20">42</span>
+                <span className="text-sky-300/80">{"const session = await"}</span>
+              </div>
+              <div className="flex rounded bg-red-400/[0.07] px-2 text-red-200/80">
+                <span className="mr-3 text-red-300/50">-</span>
+                <span>db.checkout.findUnique(id)</span>
+              </div>
+              <div className="flex rounded bg-emerald-400/[0.08] px-2 text-emerald-200/80">
+                <span className="mr-3 text-emerald-300/50">+</span>
+                <span>db.checkout.findUnique({"{ id, userId }"})</span>
+              </div>
+              <div className="flex gap-5">
+                <span className="w-5 text-right text-white/20">44</span>
+                <span className="text-white/55">return format(session)</span>
+              </div>
+              <div className="mt-6 flex gap-2 border-t border-white/10 pt-5 text-[10px] text-white/35">
+                <GitBranch className="size-3.5" />
+                12 files changed
+                <span className="text-emerald-400">+84</span>
+                <span className="text-red-400">-19</span>
+              </div>
+            </div>
+          </div>
 
-      {/* Review node */}
-      <motion.div
-        className="absolute right-[13%] top-1/2 z-10 -translate-y-1/2"
-        initial={{ opacity: 0, x: 30 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.7, ease }}
-      >
-        <SystemNode
-          icon={<ShieldCheck className="size-4" />}
-          label="Review ready"
-          sub="3 findings"
-        />
-      </motion.div>
-
-      {/* Connections */}
-      <motion.div
-        className="absolute left-[29%] top-1/2 h-px w-[20%] origin-left bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1.2, delay: 1 }}
-      />
-
-      <motion.div
-        className="absolute right-[29%] top-1/2 h-px w-[20%] origin-right bg-gradient-to-l from-transparent via-sky-400/60 to-transparent"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1.2, delay: 1.2 }}
-      />
-
-      {/* Bottom status */}
-      <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between border-t border-white/[0.07] pt-4">
-        <div className="flex items-center gap-2 font-mono text-[10px] text-white/35">
-          <span className="size-1.5 rounded-full bg-emerald-400" />
-          analyzing repository context
+          <div className="bg-white/[0.025] p-5 sm:p-7">
+            <div className="mb-5 flex items-center gap-2">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-emerald-400/10 text-emerald-300">
+                <Sparkles className="size-3.5" />
+              </span>
+              <div>
+                <div className="text-xs font-medium">Chai review</div>
+                <div className="text-[10px] text-white/35">Completed in 18s</div>
+              </div>
+              <CircleCheck className="ml-auto size-4 text-emerald-400" />
+            </div>
+            <div className="rounded-xl border border-amber-300/20 bg-amber-300/[0.06] p-4">
+              <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-amber-300">
+                <span className="size-1.5 rounded-full bg-amber-300" />
+                Security · medium
+              </div>
+              <p className="text-[11px] leading-5 text-white/60">
+                This lookup is not scoped to the current user. A signed-in
+                user could access another customer&apos;s checkout session.
+              </p>
+              <div className="mt-4 flex items-center gap-1.5 text-[10px] text-amber-200/70">
+                <ArrowUpRight className="size-3" />
+                View suggested fix
+              </div>
+            </div>
+            <div className="mt-4 flex items-center gap-2 text-[10px] text-white/35">
+              <Check className="size-3 text-emerald-400" />
+              4 checks passed
+              <span className="mx-1 text-white/15">•</span>
+              context-aware
+            </div>
+          </div>
         </div>
-
-        <div className="font-mono text-[10px] text-white/25">chai/reviewer</div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
-function SystemNode({
-  icon,
-  label,
-  sub,
+function WorkflowStep({
+  number,
+  icon: Icon,
+  title,
+  text,
 }: {
-  icon: React.ReactNode;
-  label: string;
-  sub: string;
+  number: string;
+  icon: typeof GitPullRequest;
+  title: string;
+  text: string;
 }) {
   return (
-    <div className="w-36 rounded-2xl border border-white/10 bg-white/[0.045] p-3 backdrop-blur-xl">
-      <div className="mb-3 flex size-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.06] text-white/70">
-        {icon}
+    <motion.div
+      variants={reveal}
+      className="group relative rounded-2xl border border-border bg-card p-6 transition-colors hover:border-emerald-500/40"
+    >
+      <div className="mb-10 flex items-center justify-between">
+        <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+          <Icon className="size-5" />
+        </span>
+        <span className="font-mono text-xs text-muted-foreground/60">{number}</span>
       </div>
-
-      <div className="text-xs font-medium text-white/80">{label}</div>
-
-      <div className="mt-1 font-mono text-[9px] text-white/35">{sub}</div>
-    </div>
-  );
-}
-
-function ReviewPanel() {
-  const lines = [
-    {
-      number: "18",
-      code: "const users = await db.user.findMany({",
-      type: "normal",
-    },
-    {
-      number: "19",
-      code: "  include: { posts: true },",
-      type: "warning",
-    },
-    {
-      number: "20",
-      code: "});",
-      type: "normal",
-    },
-    {
-      number: "21",
-      code: "",
-      type: "normal",
-    },
-    {
-      number: "22",
-      code: "return users.map(formatUser);",
-      type: "normal",
-    },
-  ];
-
-  return (
-    <div className="relative overflow-hidden rounded-3xl border border-border/70 bg-card shadow-2xl">
-      <div className="flex h-12 items-center justify-between border-b border-border/60 px-5">
-        <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-red-400/70" />
-          <span className="size-2 rounded-full bg-yellow-400/70" />
-          <span className="size-2 rounded-full bg-green-400/70" />
-        </div>
-
-        <div className="font-mono text-[10px] text-muted-foreground">
-          users.ts
-        </div>
-
-        <div className="w-10" />
-      </div>
-
-      <div className="grid min-h-[330px] md:grid-cols-[1fr_260px]">
-        <div className="bg-zinc-950 p-6 font-mono text-[11px] leading-7 text-zinc-400">
-          {lines.map((line, index) => (
-            <motion.div
-              key={line.number}
-              className={`flex ${
-                line.type === "warning" ? "bg-amber-400/[0.08]" : ""
-              }`}
-              initial={{ opacity: 0, x: -8 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                delay: index * 0.08,
-                duration: 0.45,
-              }}
-            >
-              <span className="mr-6 w-5 select-none text-right text-zinc-700">
-                {line.number}
-              </span>
-
-              <span
-                className={
-                  line.type === "warning"
-                    ? "text-amber-200/80"
-                    : "text-zinc-400"
-                }
-              >
-                {line.code}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          className="border-t border-border/60 bg-background p-5 md:border-l md:border-t-0"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-        >
-          <div className="mb-5 flex items-center gap-2">
-            <Sparkles className="size-4 text-primary" />
-            <span className="text-xs font-semibold">AI review</span>
-          </div>
-
-          <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.05] p-4">
-            <div className="mb-2 flex items-center gap-2 text-[10px] font-medium uppercase tracking-wider text-amber-500">
-              <Zap className="size-3" />
-              performance
-            </div>
-
-            <p className="text-xs leading-5 text-muted-foreground">
-              This relation may load posts for every user. Consider selecting
-              only the fields needed by this response.
-            </p>
-          </div>
-
-          <div className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground">
-            <Check className="size-3 text-primary" />
-            context-aware finding
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-function ContextGraph() {
-  const nodes = [
-    {
-      icon: GitPullRequest,
-      title: "Pull request",
-      sub: "What changed?",
-      position: "left-0 top-[10%]",
-    },
-    {
-      icon: Code2,
-      title: "Repository",
-      sub: "How does it work?",
-      position: "left-[5%] bottom-[8%]",
-    },
-    {
-      icon: Terminal,
-      title: "Code",
-      sub: "What does it affect?",
-      position: "right-[4%] top-[8%]",
-    },
-    {
-      icon: ShieldCheck,
-      title: "Review",
-      sub: "What needs attention?",
-      position: "right-0 bottom-[10%]",
-    },
-  ];
-
-  return (
-    <div className="relative mx-auto h-[430px] max-w-3xl">
-      <div className="absolute left-1/2 top-1/2 size-36 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/20 bg-primary/[0.04] p-3">
-        <div className="flex h-full w-full items-center justify-center rounded-full border border-primary/20 bg-background shadow-[0_0_100px_rgba(16,185,129,0.1)]">
-          <div className="text-center">
-            <Sparkles className="mx-auto mb-2 size-5 text-primary" />
-            <div className="font-mono text-[10px] uppercase tracking-[0.2em]">
-              context
-            </div>
-            <div className="mt-1 text-[10px] text-muted-foreground">engine</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Connecting lines */}
-      <div className="absolute left-[18%] top-[30%] h-px w-[27%] rotate-[20deg] bg-gradient-to-r from-border to-primary/30" />
-      <div className="absolute bottom-[30%] left-[20%] h-px w-[26%] -rotate-[20deg] bg-gradient-to-r from-border to-primary/30" />
-      <div className="absolute right-[18%] top-[30%] h-px w-[27%] -rotate-[20deg] bg-gradient-to-l from-border to-primary/30" />
-      <div className="absolute bottom-[30%] right-[20%] h-px w-[26%] rotate-[20deg] bg-gradient-to-l from-border to-primary/30" />
-
-      {nodes.map((node, index) => {
-        const Icon = node.icon;
-
-        return (
-          <motion.div
-            key={node.title}
-            className={`absolute ${node.position} w-40 rounded-2xl border border-border bg-background/80 p-4 backdrop-blur-xl`}
-            initial={{ opacity: 0, scale: 0.85 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.6,
-              delay: index * 0.12,
-              ease,
-            }}
-            whileHover={{ y: -4 }}
-          >
-            <Icon className="mb-4 size-4 text-primary" />
-            <div className="text-xs font-medium">{node.title}</div>
-            <div className="mt-1 text-[10px] text-muted-foreground">
-              {node.sub}
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
+      <h3 className="text-base font-semibold">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p>
+      <div className="mt-7 h-px w-0 bg-emerald-500 transition-all duration-500 group-hover:w-12" />
+    </motion.div>
   );
 }
 
 export default function Home() {
-  const reviewRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: reviewRef,
-    offset: ["start end", "end start"],
-  });
-
-  const reviewY = useTransform(scrollYProgress, [0, 1], [80, -80]);
-  const reviewRotate = useTransform(scrollYProgress, [0, 1], [2, -2]);
-
   return (
     <main className="min-h-screen overflow-hidden bg-background">
-      {/* NAV */}
-      <nav className="fixed left-1/2 top-0 z-50 flex h-16 w-full max-w-7xl -translate-x-1/2 items-center justify-between px-5 md:px-8">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-background/70 backdrop-blur-xl" />
-
-        <Link href="/" className="relative z-10 flex items-center gap-2">
-          {/* TODO: change this to your actual logo image path */}
-          <Image
-            src="/logo.svg"
-            alt="Chai AI Code Reviewer"
-            width={32}
-            height={32}
-            className="rounded-lg"
-          />
-
-          <span className="font-semibold tracking-tight">Chai</span>
-        </Link>
-
-        <div className="relative z-10 hidden items-center gap-8 text-xs text-muted-foreground md:flex">
-          <a href="#how" className="transition-colors hover:text-foreground">
-            How it works
-          </a>
-          <a href="#review" className="transition-colors hover:text-foreground">
-            Reviews
-          </a>
-          <a
-            href="#context"
-            className="transition-colors hover:text-foreground"
-          >
-            Context
-          </a>
-        </div>
-
-        <div className="relative z-10 flex items-center gap-2">
-          <ModeToggle />
-          <UserMenuWithSession variant="compact" />
-
-          <Link
-            href="/sign-in"
-            className="hidden rounded-full border border-border bg-background px-4 py-2 text-xs font-medium transition hover:bg-muted sm:block"
-          >
-            Get started
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-background/75 backdrop-blur-xl">
+        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 md:px-8">
+          <Link href="/" className="flex items-center gap-2.5">
+            <Image
+              src="/logo.svg"
+              alt="Chai"
+              width={30}
+              height={30}
+              className="rounded-lg"
+            />
+            <span className="text-sm font-semibold tracking-tight">Chai</span>
           </Link>
+
+          <div className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
+            <a href="#product" className="transition hover:text-foreground">Product</a>
+            <a href="#workflow" className="transition hover:text-foreground">How it works</a>
+            <a href="#security" className="transition hover:text-foreground">Security</a>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <ModeToggle />
+            <UserMenuWithSession variant="compact" />
+            <Link
+              href="/sign-in"
+              className="flex h-9 items-center gap-1.5 rounded-lg bg-foreground px-3 text-xs font-medium text-background transition hover:-translate-y-0.5 sm:px-4"
+            >
+              Get started
+              <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="relative flex min-h-screen items-center px-5 pb-20 pt-32 md:px-8">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute left-1/2 top-0 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-primary/[0.035] blur-[140px]" />
-
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(120,120,120,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(120,120,120,0.055)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+      <section className="relative px-5 pb-24 pt-40 md:px-8 md:pb-32 md:pt-48">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[760px] overflow-hidden">
+          <div className="absolute left-1/2 top-[-240px] h-[650px] w-[900px] -translate-x-1/2 rounded-full bg-emerald-500/[0.10] blur-[150px] dark:bg-emerald-500/[0.12]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(120,120,120,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(120,120,120,0.07)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:linear-gradient(to_bottom,black_15%,transparent_85%)]" />
         </div>
 
-        <div className="mx-auto w-full max-w-7xl">
-          <motion.div
-            className="mx-auto max-w-4xl text-center"
-            initial="hidden"
-            animate="visible"
-            variants={stagger}
-          >
-            <motion.div
-              variants={fadeUp}
-              className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground backdrop-blur"
-            >
-              <span className="size-1.5 animate-pulse rounded-full bg-primary" />
-              AI code review for serious developers
-            </motion.div>
-
-            <motion.h1
-              variants={fadeUp}
-              className="text-balance text-5xl font-semibold leading-[0.95] tracking-[-0.055em] sm:text-6xl md:text-8xl"
-            >
-              Code review that
+        <div className="mx-auto max-w-7xl text-center">
+          <motion.div initial="hidden" animate="visible" variants={reveal}>
+            <div className="mx-auto mb-7 flex w-fit items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/[0.07] px-3 py-1.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+              <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+              AI code review, without the noise
+              <ChevronRight className="size-3.5" />
+            </div>
+            <h1 className="mx-auto max-w-5xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.06em] sm:text-6xl md:text-8xl">
+              Ship with confidence.
               <br />
-              <span className="text-muted-foreground">
-                actually understands
-              </span>
-              <br />
-              your code.
-            </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              className="mx-auto mt-8 max-w-2xl text-pretty text-sm leading-6 text-muted-foreground md:text-base"
-            >
-              Chai reads the change, follows the surrounding code, understands
-              the context, and surfaces the issues worth looking at — before
-              they become someone else&apos;s problem.
-            </motion.p>
-
-            <motion.div
-              variants={fadeUp}
-              className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
-            >
+              <span className="text-muted-foreground">Review at the speed of AI.</span>
+            </h1>
+            <p className="mx-auto mt-7 max-w-2xl text-pretty text-base leading-7 text-muted-foreground md:text-lg">
+              Chai understands your pull requests in context, catches the
+              issues that matter, and gives your team more time to build.
+            </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href="/sign-in"
-                className="group flex h-11 items-center gap-2 rounded-full bg-foreground px-6 text-xs font-medium text-background transition hover:-translate-y-0.5"
+                className="group flex h-12 items-center gap-2 rounded-xl bg-foreground px-6 text-sm font-medium text-background shadow-lg shadow-foreground/10 transition hover:-translate-y-0.5"
               >
-                Review your first PR
-                <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                Start reviewing for free
+                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
-
               <a
-                href="#how"
-                className="flex h-11 items-center gap-2 rounded-full border border-border bg-background/70 px-6 text-xs font-medium backdrop-blur transition hover:bg-muted"
+                href="#product"
+                className="flex h-12 items-center gap-2 rounded-xl border border-border bg-background/70 px-6 text-sm font-medium backdrop-blur transition hover:bg-muted"
               >
+                <Play className="size-3.5 fill-current" />
                 See how it works
-                <ChevronDown className="size-3.5" />
               </a>
-            </motion.div>
+            </div>
+            <div className="mt-5 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <Check className="size-3.5 text-emerald-500" />
+              No credit card required
+              <span className="text-border">•</span>
+              Connect GitHub in 60 seconds
+            </div>
           </motion.div>
 
-          <HeroSystem />
+          <ProductPreview />
         </div>
       </section>
 
-      {/* TRANSITION */}
-      <section
-        id="how"
-        className="border-y border-border/60 px-5 py-28 md:px-8"
-      >
-        <div className="mx-auto max-w-7xl">
-          <SectionLabel>The idea</SectionLabel>
+      <section className="border-y border-border/70 bg-muted/30 px-5 py-8 md:px-8">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-5 md:flex-row">
+          <p className="text-center text-xs font-medium text-muted-foreground md:text-left">
+            Built for teams who care about what ships
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-semibold tracking-tight text-muted-foreground/60">
+            <span>acme</span>
+            <span className="font-mono">northstar_</span>
+            <span>◎ orbit</span>
+            <span className="italic">vertex</span>
+            <span>▲ altitude</span>
+          </div>
+        </div>
+      </section>
 
-          <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-end">
-            <motion.h2
-              className="max-w-4xl text-4xl font-medium leading-[1.05] tracking-[-0.04em] md:text-6xl"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease }}
-            >
-              Most reviews look at the diff.
+      <section id="product" className="px-5 py-28 md:px-8 md:py-36">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-2xl">
+            <SectionKicker>One less bottleneck</SectionKicker>
+            <h2 className="text-4xl font-semibold leading-[1.05] tracking-[-0.045em] md:text-6xl">
+              Your best engineers
               <br />
-              <span className="text-muted-foreground">
-                Chai looks at the system.
-              </span>
-            </motion.h2>
-
-            <motion.p
-              className="max-w-md text-sm leading-6 text-muted-foreground"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15, ease }}
-            >
-              A changed line rarely exists in isolation. Good review requires
-              understanding what that line touches, what assumptions surround
-              it, and what could break downstream.
-            </motion.p>
-          </div>
-        </div>
-      </section>
-
-      {/* REVIEW */}
-      <section
-        id="review"
-        ref={reviewRef}
-        className="relative px-5 py-32 md:px-8"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-16 md:grid-cols-[0.7fr_1.3fr] md:items-center">
-            <div>
-              <SectionLabel>Inside the review</SectionLabel>
-
-              <motion.h2
-                className="text-4xl font-medium leading-[1.05] tracking-[-0.04em] md:text-5xl"
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, ease }}
-              >
-                Findings with
-                <br />
-                <span className="text-muted-foreground">
-                  a reason behind them.
-                </span>
-              </motion.h2>
-
-              <motion.p
-                className="mt-6 max-w-md text-sm leading-6 text-muted-foreground"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.1, ease }}
-              >
-                No walls of generic AI comments. Chai is designed to turn a
-                finding into something actionable: what is wrong, why it
-                matters, and where the problem comes from.
-              </motion.p>
-
-              <div className="mt-8 space-y-3">
-                {[
-                  "Explain the actual risk",
-                  "Point to the relevant code",
-                  "Suggest a practical direction",
-                ].map((item, index) => (
-                  <motion.div
-                    key={item}
-                    className="flex items-center gap-3 text-xs"
-                    initial={{ opacity: 0, x: -15 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      duration: 0.5,
-                      delay: index * 0.1,
-                    }}
-                  >
-                    <span className="flex size-5 items-center justify-center rounded-full border border-primary/20 bg-primary/[0.06]">
-                      <Check className="size-3 text-primary" />
-                    </span>
-                    {item}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            <motion.div
-              style={{
-                y: reviewY,
-                rotate: reviewRotate,
-              }}
-            >
-              <ReviewPanel />
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTEXT */}
-      <section
-        id="context"
-        className="overflow-hidden border-y border-border/60 px-5 py-32 md:px-8"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <SectionLabel>Context engine</SectionLabel>
-
-            <motion.h2
-              className="text-4xl font-medium tracking-[-0.04em] md:text-6xl"
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease }}
-            >
-              The diff is only
-              <br />
-              <span className="text-muted-foreground">the beginning.</span>
-            </motion.h2>
-
-            <motion.p
-              className="mx-auto mt-6 max-w-xl text-sm leading-6 text-muted-foreground"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-            >
-              The interesting part of code review is understanding
-              relationships. Chai&apos;s review experience is built around that
-              idea.
-            </motion.p>
+              <span className="text-muted-foreground">shouldn&apos;t be a queue.</span>
+            </h2>
+            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground">
+              Chai gives every pull request a thoughtful first pass, so your
+              team can spend review time on architecture, product, and the
+              decisions that need human judgment.
+            </p>
           </div>
 
-          <ContextGraph />
-        </div>
-      </section>
-
-      {/* DEVELOPER FLOW */}
-      <section className="px-5 py-32 md:px-8">
-        <div className="mx-auto max-w-7xl">
-          <SectionLabel>Built around your workflow</SectionLabel>
-
-          <div className="grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-3">
-            {[
-              {
-                icon: GitPullRequest,
-                number: "01",
-                title: "Open a PR",
-                text: "Keep your normal GitHub workflow. Chai enters when there is something new to review.",
-              },
-              {
-                icon: Sparkles,
-                number: "02",
-                title: "Let Chai think",
-                text: "The reviewer traces the change through the surrounding code and looks for meaningful issues.",
-              },
-              {
-                icon: GitMerge,
-                number: "03",
-                title: "Ship with context",
-                text: "Review findings where they belong — alongside the code your team is already discussing.",
-              },
-            ].map((item, index) => {
-              const Icon = item.icon;
-
+          <div className="mt-16 grid gap-4 md:grid-cols-3">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
               return (
                 <motion.div
-                  key={item.number}
-                  className="group relative bg-background p-8 md:p-10"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.1,
-                    ease,
-                  }}
-                  whileHover={{ backgroundColor: "rgba(120,120,120,0.04)" }}
+                  key={feature.title}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                  variants={reveal}
+                  transition={{ delay: index * 0.06 }}
+                  className={`rounded-2xl border border-border bg-card p-7 transition hover:-translate-y-1 hover:border-emerald-500/35 ${feature.className}`}
                 >
-                  <div className="mb-16 flex items-center justify-between">
-                    <Icon className="size-5 text-muted-foreground transition-colors group-hover:text-primary" />
-
-                    <span className="font-mono text-[10px] text-muted-foreground">
-                      {item.number}
+                  <div className="flex items-start justify-between">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                      <Icon className="size-5" />
                     </span>
+                    <span className="font-mono text-[10px] text-muted-foreground/60">0{index + 1}</span>
                   </div>
-
-                  <h3 className="text-lg font-medium">{item.title}</h3>
-
-                  <p className="mt-3 text-xs leading-6 text-muted-foreground">
-                    {item.text}
-                  </p>
+                  <div className="mt-12 max-w-lg">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400">
+                      {feature.eyebrow}
+                    </p>
+                    <h3 className="mt-2 text-xl font-semibold tracking-tight">{feature.title}</h3>
+                    <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">{feature.text}</p>
+                  </div>
                 </motion.div>
               );
             })}
@@ -781,108 +352,119 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MANIFESTO */}
-      <section className="relative px-5 py-36 md:px-8">
-        <div className="absolute inset-0 -z-10 bg-primary/[0.025]" />
-
-        <motion.div
-          className="mx-auto max-w-5xl text-center"
-          initial={{ opacity: 0, scale: 0.97 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, ease }}
-        >
-          <div className="mx-auto mb-8 flex size-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/[0.05]">
-            <Sparkles className="size-5 text-primary" />
+      <section id="workflow" className="border-y border-border/70 bg-muted/25 px-5 py-28 md:px-8 md:py-36">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <div>
+              <SectionKicker>Simple by design</SectionKicker>
+              <h2 className="max-w-2xl text-4xl font-semibold leading-[1.05] tracking-[-0.045em] md:text-6xl">
+                From pull request
+                <br />
+                <span className="text-muted-foreground">to peace of mind.</span>
+              </h2>
+            </div>
+            <p className="max-w-sm text-sm leading-6 text-muted-foreground">
+              No dashboards to babysit. No new process to teach. Just better
+              feedback, exactly where your team already works.
+            </p>
           </div>
 
-          <h2 className="text-4xl font-medium leading-[1.05] tracking-[-0.05em] md:text-7xl">
-            Your reviewers should spend
-            <br />
-            <span className="text-muted-foreground">
-              less time finding problems
-            </span>
-            <br />
-            and more time solving them.
-          </h2>
-        </motion.div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+            className="mt-14 grid gap-4 md:grid-cols-3"
+          >
+            <WorkflowStep number="01" icon={GitPullRequest} title="Open a pull request" text="Connect GitHub once, then keep using the workflow your team already knows." />
+            <WorkflowStep number="02" icon={Sparkles} title="Let Chai investigate" text="Chai reads the diff and the surrounding system to find meaningful risks." />
+            <WorkflowStep number="03" icon={CircleCheck} title="Merge with confidence" text="Get clear, actionable feedback in seconds and ship without second-guessing." />
+          </motion.div>
+        </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-5 pb-8 md:px-8">
-        <motion.div
-          className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-border bg-zinc-950 px-6 py-20 text-white md:px-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease }}
-        >
-          <motion.div
-            className="absolute -right-32 -top-32 size-96 rounded-full bg-emerald-500/10 blur-[100px]"
-            animate={{
-              scale: [1, 1.3, 1],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-
-          <div className="relative max-w-2xl">
-            <div className="mb-6 font-mono text-[10px] uppercase tracking-[0.25em] text-white/35">
-              chai / code reviewer
-            </div>
-
-            <h2 className="text-4xl font-medium tracking-[-0.04em] md:text-6xl">
-              Let&apos;s review
+      <section id="security" className="px-5 py-28 md:px-8 md:py-36">
+        <div className="mx-auto grid max-w-7xl gap-16 md:grid-cols-[0.9fr_1.1fr] md:items-center">
+          <div>
+            <SectionKicker>Made for real codebases</SectionKicker>
+            <h2 className="text-4xl font-semibold leading-[1.05] tracking-[-0.045em] md:text-6xl">
+              Context is the
               <br />
-              something real.
+              <span className="text-muted-foreground">competitive edge.</span>
             </h2>
-
-            <p className="mt-6 max-w-md text-sm leading-6 text-white/45">
-              Connect your GitHub workflow and see what an AI reviewer can find
-              in your next pull request.
+            <p className="mt-6 max-w-md text-base leading-7 text-muted-foreground">
+              A changed line is never just a changed line. Chai follows the
+              relationships around it so findings arrive with the context your
+              team needs to act.
             </p>
-
-            <Link
-              href="/sign-in"
-              className="group mt-9 inline-flex h-11 items-center gap-2 rounded-full bg-white px-6 text-xs font-medium text-black transition hover:-translate-y-0.5"
-            >
-              Get started with Chai
-              <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <Link href="/sign-in" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+              Explore Chai
+              <ArrowRight className="size-4" />
             </Link>
           </div>
-        </motion.div>
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-xl shadow-black/[0.03] md:p-8">
+            <div className="absolute right-0 top-0 size-56 rounded-full bg-emerald-500/10 blur-3xl" />
+            <div className="relative grid gap-3 sm:grid-cols-2">
+              {[
+                ["Pull request", "What changed?", GitPullRequest],
+                ["Repository", "How does it work?", Code2],
+                ["Dependencies", "What does it touch?", GitBranch],
+                ["Review", "What needs attention?", ShieldCheck],
+              ].map(([title, sub, Icon], index) => (
+                <div key={title as string} className="rounded-2xl border border-border bg-background/70 p-4">
+                  <div className="flex items-center justify-between">
+                    <Icon className="size-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="font-mono text-[10px] text-muted-foreground/50">0{index + 1}</span>
+                  </div>
+                  <div className="mt-7 text-sm font-semibold">{title as string}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{sub as string}</div>
+                </div>
+              ))}
+            </div>
+            <div className="relative mt-3 flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4">
+              <Sparkles className="size-4 text-emerald-600 dark:text-emerald-400" />
+              <div>
+                <div className="text-xs font-semibold">A review that sees the whole picture</div>
+                <div className="mt-1 text-[11px] text-muted-foreground">Relevant context, fewer false positives.</div>
+              </div>
+              <ArrowUpRight className="ml-auto size-4 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-5 py-8 text-[10px] text-muted-foreground sm:flex-row sm:items-center sm:justify-between md:px-8">
-        <div className="flex items-center gap-2">
-          {/* TODO: use the same actual logo path here */}
-          <Image
-            src="/logo.png"
-            alt=""
-            width={20}
-            height={20}
-            className="rounded"
-          />
-
-          <span>Chai AI Code Reviewer</span>
+      <section className="px-5 pb-28 md:px-8 md:pb-36">
+        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-[#101413] px-6 py-16 text-center text-white sm:px-12">
+          <div className="absolute left-1/2 top-0 size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/20 blur-[90px]" />
+          <div className="relative">
+            <GithubLogoIcon className="mx-auto mb-6 size-7 text-emerald-300" />
+            <h2 className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
+              Make every review count.
+            </h2>
+            <p className="mx-auto mt-5 max-w-lg text-sm leading-6 text-white/55">
+              Give your team a smarter first pass and more time for the work
+              only they can do.
+            </p>
+            <Link href="/sign-in" className="mt-8 inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-[#101413] transition hover:-translate-y-0.5">
+              Connect GitHub
+              <ArrowUpRight className="size-4" />
+            </Link>
+          </div>
         </div>
+      </section>
 
-        <div className="flex items-center gap-5">
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 transition-colors hover:text-foreground"
-          >
-            <GithubLogoIcon className="size-3" />
-            GitHub
-          </a>
-
-          <span>Built for developers.</span>
+      <footer className="border-t border-border/70 px-5 py-8 md:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <Image src="/logo.svg" alt="Chai" width={22} height={22} className="rounded-md" />
+            <span className="font-semibold text-foreground">Chai</span>
+            <span>· AI code review for thoughtful teams.</span>
+          </div>
+          <div className="flex items-center gap-5">
+            <Link href="/sign-in" className="transition hover:text-foreground">Sign in</Link>
+            <a href="https://github.com" className="transition hover:text-foreground">GitHub</a>
+            <span>© 2026 Chai</span>
+          </div>
         </div>
       </footer>
     </main>
