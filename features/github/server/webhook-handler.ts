@@ -7,7 +7,7 @@ const REVIEWABLE_ACTIONS: ReadonlySet<string> = new Set([
   "reopened",
 ]);
 
-console.log("REVIEWABLE_ACTIONS:", REVIEWABLE_ACTIONS);
+
 
 export type PullRequestWebhookPayload = {
   // webhook actions e.g. "opened", "synchronize", "closed", "reopened"
