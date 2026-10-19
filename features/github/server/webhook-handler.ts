@@ -39,6 +39,13 @@ export async function handleGihubWebhook(request: Request) {
   const signature = request.headers.get("x-hub-signature-256");
   const eventName = request.headers.get("x-github-event");
 
+  if (eventName === "pull_request") {
+    console.log(
+      "Received GitHub pull_request webhook:",
+      JSON.parse(payload) as PullRequestWebhookPayload,
+    );
+  }
+
   const isValid = await isSignatureValid(payload, signature);
 
   if (!isValid) {
@@ -50,7 +57,6 @@ export async function handleGihubWebhook(request: Request) {
   }
 
   const event = JSON.parse(payload) as PullRequestWebhookPayload;
-  console.log("Received pull request event:", event);
 
   if (!REVIEWABLE_ACTIONS.has(event.action)) {
     return Response.json({ received: true });
