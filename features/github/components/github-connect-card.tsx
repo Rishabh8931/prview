@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormStatus } from "react-dom";
 import {
   ArrowSquareOutIcon,
   GithubLogoIcon,
@@ -15,6 +16,7 @@ import { getGithubInstallUrl } from "@/features/github/utils/github-app";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -53,17 +55,27 @@ function DisconnectedDetails() {
   );
 }
 
+function DisconnectButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      variant="outline"
+      className={statusButtonClass.danger}
+      disabled={pending}
+      aria-busy={pending}
+    >
+      {pending ? <Spinner className="size-4" /> : <PlugsIcon />}
+      {pending ? "Disconnecting..." : "Disconnect GitHub App"}
+    </Button>
+  );
+}
+
 function ConnectedActions() {
   return (
     <form action={disconnectGithubApp}>
-      <Button
-        type="submit"
-        variant="outline"
-        className={statusButtonClass.danger}
-      >
-        <PlugsIcon />
-        Disconnect GitHub App
-      </Button>
+      <DisconnectButton />
     </form>
   );
 }

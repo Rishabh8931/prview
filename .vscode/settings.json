@@ -1,0 +1,90 @@
+{
+  "workbench.colorCustomizations": {
+    "editor.background": "#000000",
+    "editor.foreground": "#F8F8F2",
+    "editorLineNumber.foreground": "#6272A4",
+    "editorLineNumber.activeForeground": "#F8F8F2",
+    "editor.selectionBackground": "#44475A",
+    "editor.lineHighlightBackground": "#111111",
+    "editorCursor.foreground": "#FF79C6",
+    "editorIndentGuide.background1": "#222222",
+    "editorIndentGuide.activeBackground1": "#44475A"
+  },
+
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": ["comment", "punctuation.definition.comment"],
+        "settings": {
+          "foreground": "#6272A4",
+          "fontStyle": "italic"
+        }
+      },
+      {
+        "scope": ["keyword", "storage.type", "storage.modifier"],
+        "settings": {
+          "foreground": "#FF79C6"
+        }
+      },
+      {
+        "scope": ["string", "string.quoted", "string.template"],
+        "settings": {
+          "foreground": "#F1FA8C"
+        }
+      },
+      {
+        "scope": [
+          "constant.numeric",
+          "constant.language",
+          "constant.character"
+        ],
+        "settings": {
+          "foreground": "#BD93F9"
+        }
+      },
+      {
+        "scope": ["entity.name.function", "support.function"],
+        "settings": {
+          "foreground": "#50FA7B"
+        }
+      },
+      {
+        "scope": ["entity.name.type", "entity.name.class", "support.type"],
+        "settings": {
+          "foreground": "#8BE9FD"
+        }
+      },
+      {
+        "scope": ["variable", "meta.definition.variable"],
+        "settings": {
+          "foreground": "#F8F8F2"
+        }
+      },
+      {
+        "scope": ["entity.name.tag"],
+        "settings": {
+          "foreground": "#FF79C6"
+        }
+      },
+      {
+        "scope": ["entity.other.attribute-name"],
+        "settings": {
+          "foreground": "#50FA7B"
+        }
+      },
+      {
+        "scope": ["punctuation", "meta.brace"],
+        "settings": {
+          "foreground": "#F8F8F2"
+        }
+      }
+    ]
+  },
+
+  "editor.fontFamily": "'SF Mono', Menlo, Monaco, monospace",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 23,
+  "editor.fontLigatures": true,
+  "editor.cursorBlinking": "smooth",
+  "editor.smoothScrolling": true
+}
