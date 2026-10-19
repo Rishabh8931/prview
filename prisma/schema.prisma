@@ -17,16 +17,16 @@ model test {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  githubInstallation     GithubInstallation?
+  id                 String              @id
+  name               String
+  email              String
+  emailVerified      Boolean             @default(false)
+  image              String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  sessions           Session[]
+  accounts           Account[]
+  githubInstallation GithubInstallation?
 
   @@unique([email])
   @@map("user")
@@ -43,6 +43,25 @@ model GithubInstallation {
   updatedAt      DateTime @updatedAt
 
   @@map("github_installation")
+}
+
+model PullRequest {
+  id             String    @id @default(cuid())
+  installationId Int       @unique
+  repoFullName   String // e.g. owner/repo
+  prNumber       Int
+  title          String
+  authorLogin    String?
+  headSha        String // latest commit sha of the PR branch
+  baseBranch     String // base branch of the PR
+  status         String    @default("pending") // open, closed, merged, processing, completed
+  reviewComment  String? // AI-generated markdown saved after completion of the review
+  reviewedAt     DateTime? // timestamp when the review was completed
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([repoFullName, prNumber])
+  @@map("pull_request")
 }
 
 model Session {
@@ -92,5 +111,3 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
-
-
