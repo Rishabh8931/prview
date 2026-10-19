@@ -1,7 +1,11 @@
 import { getGithubApp } from "../utils/github-app";
 import { savePullRequest } from "@/features/reviews/server/save-pull-request";
 
-const REVIEWBLE_ACTIONS = ["opened", "synchronize", "reopened"] as const;
+const REVIEWABLE_ACTIONS: ReadonlySet<string> = new Set([
+  "opened",
+  "synchronize",
+  "reopened",
+]);
 
 export type PullRequestWebhookPayload = {
   // webhook actions e.g. "opened", "synchronize", "closed", "reopened"
@@ -48,7 +52,7 @@ export async function handleGihubWebhook(request: Request) {
   const event = JSON.parse(payload) as PullRequestWebhookPayload;
   console.log("Received pull request event:", event);
 
-  if (!REVIEWBLE_ACTIONS.includes(event.action as any)) {
+  if (!REVIEWABLE_ACTIONS.has(event.action)) {
     return Response.json({ received: true });
   }
 
