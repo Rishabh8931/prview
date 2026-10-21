@@ -44,9 +44,14 @@ In the GitHub App settings, configure:
 - **Repository permissions**: at least **Pull requests: Read and write**
 - **Subscribe to events**: **Pull request**
 
+The app must be installed on the exact repository where the pull request is
+opened. If the installation uses **Only select repositories**, add that
+repository in the installation settings; being connected to GitHub does not
+grant access to every repository.
+
 After changing the webhook URL while using ngrok, use the current public HTTPS
-URL and reinstall the app or update the App settings. The app must also be
-installed on the repository where the pull request is opened. GitHub's
+URL and update the App settings. Verify that the endpoint is reachable by
+opening `https://<your-public-domain>/api/github/webhook` in a browser. GitHub's
 **Settings → Developer settings → GitHub Apps → your app → Advanced → Recent
 Deliveries** page shows whether GitHub reached this endpoint and the response
 status.

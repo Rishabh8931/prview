@@ -54,6 +54,7 @@ process.on("SIGTERM", () => shutdown("SIGTERM"));
 try {
   const publicUrl = await getPublicUrl();
   console.log(`ngrok URL: ${publicUrl}`);
+  console.log(`GitHub webhook URL: ${publicUrl}/api/github/webhook`);
 
   next = spawn("pnpm", ["dev"], {
     env: {
