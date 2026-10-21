@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:ngrok": "node scripts/dev-ngrok.mjs",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma skills sync || exit 0"
