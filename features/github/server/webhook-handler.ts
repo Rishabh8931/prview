@@ -40,17 +40,21 @@ export async function handleGihubWebhook(request: Request) {
   const payload = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
   const eventName = request.headers.get("x-github-event");
+  let event: PullRequestWebhookPayload | null = null;
 
   if (eventName === "pull_request") {
-    console.log(
-      "Received GitHub pull_request webhook:",
-      JSON.parse(payload) as PullRequestWebhookPayload,
-    );
+    event = JSON.parse(payload) as PullRequestWebhookPayload;
+    console.info("Received GitHub pull_request webhook:", event);
   }
 
   const isValid = await isSignatureValid(payload, signature);
 
   if (!isValid) {
+    console.error("GitHub webhook signature verification failed", {
+      eventName,
+      hasSignature: Boolean(signature),
+      hasWebhookSecret: Boolean(process.env.GITHUB_WEBHOOK_SECRET),
+    });
     return Response.json({ message: "Invalid signature" }, { status: 401 });
   }
 
@@ -58,7 +62,9 @@ export async function handleGihubWebhook(request: Request) {
     return Response.json({ received: true });
   }
 
-  const event = JSON.parse(payload) as PullRequestWebhookPayload;
+  if (!event) {
+    event = JSON.parse(payload) as PullRequestWebhookPayload;
+  }
 
   if (!REVIEWABLE_ACTIONS.has(event.action)) {
     return Response.json({ received: true });
