@@ -1,3 +1,4 @@
-import { handleGihubWebhook } from "@/features/github/server/webhook-handler";
+import { handleGithubWebhook } from "@/features/github/server/webhook-handler";
 
-export const POST = handleGihubWebhook;
+export const dynamic = "force-dynamic";
+export const POST = handleGithubWebhook;
