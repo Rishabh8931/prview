@@ -34,21 +34,20 @@ async function isSignatureValid(payload: string, signature: string | null) {
   return app.webhooks.verify(payload, signature);
 }
 
-export async function handleGihubWebhook(request: Request) {
+export async function handleGithubWebhook(request: Request) {
   const payload = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
   const eventName = request.headers.get("x-github-event");
-
-  if (eventName === "pull_request") {
-    console.log(
-      "Received GitHub pull_request webhook:",
-      JSON.parse(payload) as PullRequestWebhookPayload,
-    );
-  }
+  
 
   const isValid = await isSignatureValid(payload, signature);
 
   if (!isValid) {
+    console.error("GitHub webhook signature verification failed", {
+      eventName,
+      hasSignature: Boolean(signature),
+      hasWebhookSecret: Boolean(process.env.GITHUB_WEBHOOK_SECRET),
+    });
     return Response.json({ message: "Invalid signature" }, { status: 401 });
   }
 
@@ -56,13 +55,36 @@ export async function handleGihubWebhook(request: Request) {
     return Response.json({ received: true });
   }
 
-  const event = JSON.parse(payload) as PullRequestWebhookPayload;
+  let event: PullRequestWebhookPayload;
+  try {
+    event = JSON.parse(payload) as PullRequestWebhookPayload;
+    console.log(event);
+  } catch {
+    console.error("GitHub webhook payload is not valid JSON", { eventName });
+    return Response.json(
+      { message: "Invalid webhook payload" },
+      { status: 400 },
+    );
+  }
+
+  console.info("Received GitHub pull_request event", {
+    action: event.action,
+    repository: event.repository.full_name,
+    pullRequestNumber: event.pull_request.number,
+  });
 
   if (!REVIEWABLE_ACTIONS.has(event.action)) {
+    console.info("Ignoring non-reviewable GitHub pull_request action", {
+      action: event.action,
+    });
     return Response.json({ received: true });
   }
 
   const pullRequest = await savePullRequest(event);
+  console.info("Saved GitHub pull request", {
+    repository: event.repository.full_name,
+    pullRequestNumber: event.pull_request.number,
+  });
 
   //[TODO] : Map gihub installatin id
 

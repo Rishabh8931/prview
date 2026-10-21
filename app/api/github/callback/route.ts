@@ -1,6 +1,7 @@
 import { DASHBOARD_ROUTES } from "@/features/dashboard/lib/routes";
 import { saveInstallation } from "@/features/github/server/installation";
 import { getServerSession } from "@/features/auth/actions";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 function buildSignInCallbackUrl(installationId: string | null): string {
@@ -24,6 +25,7 @@ export async function GET(request: Request) {
 
   if (installationId) {
     await saveInstallation(session.user.id, Number(installationId));
+    revalidatePath(DASHBOARD_ROUTES.github);
   }
 
   redirect(DASHBOARD_ROUTES.github);

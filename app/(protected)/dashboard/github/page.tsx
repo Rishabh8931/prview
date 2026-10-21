@@ -5,6 +5,8 @@ import { getInstallationStatus } from "@/features/github/server/installation";
 import { requireAuth } from "@/features/auth/actions";
 import { GithubConnectCard } from "@/features/github/components/github-connect-card";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dashboard - GitHub",
   description: "GitHub integration dashboard",
