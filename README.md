@@ -34,6 +34,23 @@ https://<your-ngrok-domain>/api/auth/callback/github
 
 Stop both the Next.js server and the ngrok tunnel with `Ctrl+C`.
 
+### Configure GitHub App webhooks
+
+In the GitHub App settings, configure:
+
+- **Webhook URL**: `https://<your-public-domain>/api/github/webhook`
+- **Webhook active**: enabled
+- **Webhook secret**: the same value as `GITHUB_WEBHOOK_SECRET`
+- **Repository permissions**: at least **Pull requests: Read and write**
+- **Subscribe to events**: **Pull request**
+
+After changing the webhook URL while using ngrok, use the current public HTTPS
+URL and reinstall the app or update the App settings. The app must also be
+installed on the repository where the pull request is opened. GitHub's
+**Settings → Developer settings → GitHub Apps → your app → Advanced → Recent
+Deliveries** page shows whether GitHub reached this endpoint and the response
+status.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
